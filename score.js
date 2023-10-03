@@ -22,4 +22,3 @@ const entity = document.querySelector("#avatarModel");
 entity.setAttribute("score-handler", "");
 
 updateScore();
-
