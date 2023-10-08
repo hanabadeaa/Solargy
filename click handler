@@ -1,0 +1,51 @@
+const positions = [
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0.7, z: 0 },
+    { x: 0.7, y: 0, z: 0 },
+    { x: 0.7, y: 0.7, z: 0 },
+    { x: -0.7, y: 0, z: 0 },
+    { x: -0.7, y: 0.7, z: 0 },
+    { x: 0.7, y: -0.7, z: 0 },
+    { x: 0, y: -0.7, z: 0 },
+    { x: -0.7, y: -0.7, z: 0 }
+];
+
+let positionIndex = 0;
+let score = 0;
+let intervalID = setInterval(moveModel, 1000);
+
+function updateScore() {
+  const scoreElement = document.querySelector("#score");
+  scoreElement.textContent = score;
+  positionIndex = (positionIndex + 1) % positions.length;
+  clearInterval(intervalID)
+  moveModel()
+  intervalID = setInterval(moveModel, 1000);
+  localStorage.setItem('score', score);
+  console.log(localStorage.getItem('score'));
+}
+
+AFRAME.registerComponent('click-handler',{
+init: function(){
+    let el = this.el
+    this.itemClicked = function(){
+        score += 1;
+
+      updateScore();
+    }
+    this.el.addEventListener('click',this.itemClicked)
+}
+})
+
+function moveModel() {
+
+    const entity = document.querySelector('#model');
+    if (entity) {
+        const position = positions[positionIndex];
+        const { x, y, z } = position;
+
+        entity.object3D.position.set(x, y, z);
+
+        positionIndex = (positionIndex + 1) % positions.length;
+    }
+}
